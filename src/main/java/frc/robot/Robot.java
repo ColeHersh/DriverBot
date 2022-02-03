@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,11 +29,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
   
-  private final TalonSRX R1 = new TalonSRX(1);
+  private final WPI_TalonSRX R1 = new WPI_TalonSRX(1);
+  private final WPI_TalonSRX R2 = new WPI_TalonSRX(2);
+  
+  MotorControllerGroup right = new MotorControllerGroup(R1, R2);
 
+  private final WPI_TalonSRX L1 = new WPI_TalonSRX(3);
+  private final WPI_TalonSRX L2 = new WPI_TalonSRX(4);
 
-  private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final Joystick m_stick = new Joystick(0);
+  MotorControllerGroup left = new MotorControllerGroup(L1, L2);
+
+  private final DifferentialDrive m_robotDrive = new DifferentialDrive(left, right);
+  private final Joystick stick = new Joystick(1);
+  private final Joystick stick2 = new Joystick(2);
 
   @Override
   public void robotInit() {
@@ -46,6 +56,6 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-    m_robotDrive.arcadeDrive(-m_stick.getY(), m_stick.getX());
+    m_robotDrive.arcadeDrive(-stick.getY(), stick2.getZ());
   }
 }
