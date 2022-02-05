@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     //m_rightMotor.setInverted(true);
+    right.setInverted(true);
   }
 
   @Override
@@ -56,6 +57,8 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-    m_robotDrive.arcadeDrive(-stick.getY(), stick2.getZ());
+    
+    //m_robotDrive.arcadeDrive(stick2.getZ(), -stick.getY());
+     m_robotDrive.tankDrive(stick2.getY(), -stick.getY());
   }
 }
