@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     
-    //m_robotDrive.arcadeDrive(stick2.getZ(), -stick.getY());
-     m_robotDrive.tankDrive(stick2.getY(), -stick.getY());
+  //  m_robotDrive.arcadeDrive(stick2.getZ(), -stick.getY());
+     m_robotDrive.tankDrive(-stick2.getY(), stick.getY());
   }
 }
