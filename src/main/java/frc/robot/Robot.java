@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +15,8 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -23,6 +27,8 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.ctre.phoenix.led.*;
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
  * arcade steering.
@@ -43,6 +49,18 @@ public class Robot extends TimedRobot {
   private final Joystick stick = new Joystick(1);
   private final Joystick stick2 = new Joystick(2);
 
+  private final PneumaticHub p = new PneumaticHub(63);
+  private final DoubleSolenoid d = p.makeDoubleSolenoid (8,9);
+  private final Compressor compress = p.makeCompressor();
+  //private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+
+  private final CANdle candle = new CANdle (0);
+  private final RainbowAnimation r = new RainbowAnimation(1,1,6);
+  private final FireAnimation f = new FireAnimation(1,1,8,.2,.4);
+  private final RgbFadeAnimation fa = new RgbFadeAnimation (1,.7,8);
+  private final StrobeAnimation s = new StrobeAnimation (100,200,8, 255, 1, 8);
+  private final ColorFlowAnimation c = new ColorFlowAnimation(100,200,8, 255, 1, 8, Direction.Backward);
+  Timer m_timer = new Timer();
   @Override
   public void robotInit() {
     // We need to invert one side of the drivetrain so that positive voltages
@@ -50,15 +68,52 @@ public class Robot extends TimedRobot {
     // gearbox is constructed, you might have to invert the left side instead.
     //m_rightMotor.setInverted(true);
     right.setInverted(true);
+    candle.setLEDs (0,250,0);
   }
 
+  
+  @Override
+  public void autonomousInit() {
+      // TODO Auto-generated method stub
+      super.autonomousInit();
+      candle.setLEDs (0,0,0);
+      m_timer.reset();
+      m_timer.start();
+  }
+     @Override
+     public void autonomousPeriodic() {
+         // TODO Auto-generated method stub
+         super.autonomousPeriodic();
+         /*candle.setLEDs (255,0,0);
+         if(m_timer.get() < 15){
+          candle.setLEDs (0,255,0);
+         }
+         else if(m_timer.get() < 30){
+          candle.setLEDs (0,0,255);
+         }
+         else{
+         // candle.setLEDs (0,255,255);*/
+          candle.animate(c);
+         }
+     
   @Override
   public void teleopPeriodic() {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-    
+    compress.enableAnalog(60,80);
+    if(stick2.getTrigger()){
+      candle.setLEDs (255,204,0);
+      d.toggle();
+    }
+    else if(stick.getTrigger()){
+      candle.setLEDs (255,0,0);
+    }
+    else{candle.setLEDs (100,100,200);}
   //  m_robotDrive.arcadeDrive(stick2.getZ(), -stick.getY());
+
+  
+
      m_robotDrive.tankDrive(-stick2.getY(), stick.getY());
   }
 }
