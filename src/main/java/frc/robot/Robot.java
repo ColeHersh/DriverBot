@@ -54,12 +54,8 @@ public class Robot extends TimedRobot {
   private final Compressor compress = p.makeCompressor();
   //private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-  private final CANdle candle = new CANdle (0);
-  private final RainbowAnimation r = new RainbowAnimation(1,1,6);
-  private final FireAnimation f = new FireAnimation(1,1,8,.2,.4);
-  private final RgbFadeAnimation fa = new RgbFadeAnimation (1,.7,8);
-  private final StrobeAnimation s = new StrobeAnimation (100,200,8, 255, 1, 8);
-  private final ColorFlowAnimation c = new ColorFlowAnimation(100,200,8, 255, 1, 8, Direction.Backward);
+  private final RobotCandle candle = new RobotCandle();
+
   Timer m_timer = new Timer();
   @Override
   public void robotInit() {
@@ -68,7 +64,7 @@ public class Robot extends TimedRobot {
     // gearbox is constructed, you might have to invert the left side instead.
     //m_rightMotor.setInverted(true);
     right.setInverted(true);
-    candle.setLEDs (0,250,0);
+    candle.setLEDs(0, 255, 0);
   }
 
   
@@ -84,17 +80,8 @@ public class Robot extends TimedRobot {
      public void autonomousPeriodic() {
          // TODO Auto-generated method stub
          super.autonomousPeriodic();
-         /*candle.setLEDs (255,0,0);
-         if(m_timer.get() < 15){
-          candle.setLEDs (0,255,0);
-         }
-         else if(m_timer.get() < 30){
-          candle.setLEDs (0,0,255);
-         }
-         else{
-         // candle.setLEDs (0,255,255);*/
-          candle.animate(c);
-         }
+         candle.update();
+     }
      
   @Override
   public void teleopPeriodic() {
