@@ -35,7 +35,7 @@ import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
  */
 public class Robot extends TimedRobot {
   
-  /*private final WPI_TalonSRX R1 = new WPI_TalonSRX(1);
+  private final WPI_TalonSRX R1 = new WPI_TalonSRX(1);
   private final WPI_TalonSRX R2 = new WPI_TalonSRX(2);
   
   MotorControllerGroup right = new MotorControllerGroup(R1, R2);
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
 
   MotorControllerGroup left = new MotorControllerGroup(L1, L2);
 
-  private final DifferentialDrive m_robotDrive = new DifferentialDrive(left, right);*/
+  private final DifferentialDrive m_robotDrive = new DifferentialDrive(left, right);
   private final Joystick stick = new Joystick(1);
   private final Joystick stick2 = new Joystick(2);
 
@@ -56,12 +56,12 @@ public class Robot extends TimedRobot {
   //private final Compressor compress = new Compressor(PneumaticsModuleType.REVPH);
   //private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-  /*private final CANdle candle = new CANdle (0);
-  private final RainbowAnimation r = new RainbowAnimation(1,1,6);
+  private final CANdle candle = new CANdle (0);
+  private final RainbowAnimation r = new RainbowAnimation(1,1,140);
   private final FireAnimation f = new FireAnimation(1,1,8,.2,.4);
   private final RgbFadeAnimation fa = new RgbFadeAnimation (1,.7,8);
   private final StrobeAnimation s = new StrobeAnimation (100,200,8, 255, 1, 8);
-  private final ColorFlowAnimation c = new ColorFlowAnimation(100,200,8, 255, 1, 8, Direction.Backward);*/
+  private final ColorFlowAnimation c = new ColorFlowAnimation(100,200,8, 255, 1, 8, Direction.Backward);
   Timer m_timer = new Timer();
   @Override
   public void robotInit() {
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
   
   
     //  right.setInverted(true); NOOOOOOOOOOOOOO
-   // candle.setLEDs (0,250,0);
+    candle.setLEDs (0,250,0);
   }
 
   
@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
    
     // p.reserveCompressor();
     if(stick2.getTriggerPressed()){
-     // candle.setLEDs (255,204,0);
+      candle.setLEDs (255,204,0);
      if(state == DoubleSolenoid.Value.kReverse){
       state = DoubleSolenoid.Value.kForward;
       d.set(state);
@@ -119,19 +119,33 @@ public class Robot extends TimedRobot {
      else{
       state = DoubleSolenoid.Value.kReverse;
       d.set(state);
+      candle.setLEDs (100,0,230);
      }
       //d.toggle();
     }
     else if(stick.getTriggerPressed()){
-      //candle.setLEDs (255,0,0);
+      candle.animate(r);
      // d.set(DoubleSolenoid.Value.kReverse);
     }
     else{//candle.setLEDs (100,100,200);
     }
-   // m_robotDrive.arcadeDrive(stick2.getZ(), -stick.getY());
+    m_robotDrive.arcadeDrive(-stick.getY(),stick2.getZ());
 
   
 
      //m_robotDrive.tankDrive(-stick2.getY(), stick.getY());
+  }
+
+  @Override
+  public void disabledInit() {
+      // TODO Auto-generated method stub
+      super.disabledInit();
+      candle.setLEDs(255,0,0);
+  }
+  @Override
+  public void disabledExit() {
+    // TODO Auto-generated method stub
+    super.disabledExit();
+    candle.setLEDs(0,255,0);
   }
 }
