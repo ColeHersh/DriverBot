@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
 
   private final PneumaticHub p = new PneumaticHub(62);
   private final DoubleSolenoid d = p.makeDoubleSolenoid (8,9);
+  private final DoubleSolenoid dSolenoid2 = p.makeDoubleSolenoid (10,11);
 
   private DoubleSolenoid.Value state = DoubleSolenoid.Value.kReverse;
   //private final Compressor compress = new Compressor(PneumaticsModuleType.REVPH);
@@ -78,7 +79,6 @@ public class Robot extends TimedRobot {
   
   @Override
   public void autonomousInit() {
-      // TODO Auto-generated method stub
       super.autonomousInit();
      // candle.setLEDs (0,0,0);
       m_timer.reset();
@@ -86,7 +86,6 @@ public class Robot extends TimedRobot {
   }
      @Override
      public void autonomousPeriodic() {
-         // TODO Auto-generated method stub
          super.autonomousPeriodic();
          /*candle.setLEDs (255,0,0);
          if(m_timer.get() < 15){
@@ -115,13 +114,14 @@ public class Robot extends TimedRobot {
      if(state == DoubleSolenoid.Value.kReverse){
       state = DoubleSolenoid.Value.kForward;
       d.set(state);
+      dSolenoid2.set(state);
      }
      else{
       state = DoubleSolenoid.Value.kReverse;
       d.set(state);
+      dSolenoid2.set(state);
       candle.setLEDs (100,0,230);
      }
-      //d.toggle();
     }
     else if(stick.getTriggerPressed()){
       candle.animate(r);
@@ -138,13 +138,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-      // TODO Auto-generated method stub
       super.disabledInit();
       candle.setLEDs(255,0,0);
   }
   @Override
   public void disabledExit() {
-    // TODO Auto-generated method stub
     super.disabledExit();
     candle.setLEDs(0,255,0);
   }
